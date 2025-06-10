@@ -1,0 +1,116 @@
+---
+title: 'Kick File Out of From Your Node.js REST API !!'
+publishedAt: '2025-05-22'
+summary: 'REST APIs are still one of the most common ways for apps to talk to each other. They’re simple, flexible, and powerful. But when it comes to uploading files — like images, PDFs, or videos — things can get a little… tricky. Especially if you’re using Express.js and trying to upload a file alongside other form data like strings or dates.'
+---
+
+![image info](/01/thumnail.png)
+EST APIs are still one of the most common ways for apps to talk to each other. They’re simple, flexible, and powerful. But when it comes to uploading files — like images, PDFs, or videos — things can get a little… tricky. Especially if you’re using Express.js and trying to upload a file alongside other form data like strings or dates
+
+## Introduction
+
+Here’s how file uploads are handled in both frameworks:
+
+Express.js (Node.js): :
+
+```javascript
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+
+app.post('/upload', upload.single('file'), (req, res) => {
+  console.log(req.file); // File information
+  console.log(req.body); // Other form fields
+  res.send('File uploaded successfully');
+});
+```
+
+Hono (Bun) :
+
+```javascript
+app.post('/upload', async (c) => {
+  const body = await c.req.parseBody();
+  const file = body['file'];
+
+  if (!file) {
+    return c.json({ message: 'No file uploaded' }, 400);
+  }
+
+  const buffer = Buffer.from(await file.arrayBuffer());
+  // Save buffer to desired location
+
+  return c.json({ message: 'File uploaded successfully' });
+});
+```
+
+As we can see, uploading files in Express.js requires a third-party middleware like multer. This middleware handles parsing the multipart form data and storing the file on disk. On the other hand, Hono lets you access the file directly from the request with minimal setup — no additional dependencies needed.
+
+Why the difference?
+
+The reason lies in the foundation of these frameworks. Node.js does not natively support multipart/form-data, which is why almost all Node.js-based frameworks (Express, Koa, Fastify, etc.) need external libraries to handle it. Even though they can run on Bun, their architecture still reflects Node.js's limitations.
+
+By contrast, Hono is designed specifically for Bun, a newer JavaScript runtime that provides built-in, first-class support for multipart/form-data. This makes file handling in Hono much simpler and more efficient by default.
+
+## The Trap
+
+![image info](/01/01-the-trap.png)
+
+Most developers validate incoming request data inside the controller. However, file uploads in Express happen in middleware before the controller logic executes.
+
+This means: the **file is already stored** before any validation occurs.
+
+## The Problem
+
+### 1. Bad Validation Position
+
+If your API only handles a file upload, this isn’t an issue. But things get risky when files are uploaded alongside other required data — like uploading an invoice with title (string), date (string), and evidence (file).
+
+![image info](/01/02-bad-validation-position.png)
+
+Here, the evidence file gets saved before we validate the title and date. So if either field is invalid, the file is still stored — even though the request fails.
+
+### 2. Need for Rollback
+
+Due to the poor validation order, you’re forced to manually delete files if validation fails. This adds complexity and can become a maintenance burden.
+
+![image info](/01/03-rollback-file.png)
+
+Now you’re managing not just business logic, but also file lifecycle concerns on failed requests.
+
+### 3. Slower Performance in Negative Test Cases
+
+When validation passes (a positive test case), everything works fine. But when it fails (a negative test case), your system wastes I/O and compute on handling files that get discarded — leading to unnecessary overhead.
+
+## Solutions
+
+### 1. Add Pre-Middleware Validation
+
+![image info](/01/04-extra-validation.png)
+
+Pros:
+
+- Prevents unnecessary file storage.
+- Cleaner separation of concerns.
+
+Cons:
+
+- Requires extra boilerplate and custom logic for validation.
+
+### 2. Introduce a File Manager / Gallery API ( Recommended)
+
+This solution addresses the problem at the architecture level — not just in code. The idea is to break file management into a separate service.
+
+![image info](/01/05-file-manager-gallery.png)
+
+Here’s the flow:
+
+1. The user uploads the file to a dedicated file manager or gallery API.
+2. The API returns the file’s URL or path.
+3. The user then references that path in other API requests (e.g., submitting an invoice).
+
+This separation:
+
+1. Keeps file management isolated and reusable.
+2. Avoids wasted storage on failed form submissions.
+3. Enables better scalability and user experience.
+
+This pattern is used widely by platforms like Microsoft Teams, YouTube, Instagram, Facebook, and many more.

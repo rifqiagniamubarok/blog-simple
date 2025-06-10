@@ -1,0 +1,89 @@
+[
+  {
+    "company": "Sinergi Merah Putih",
+    "contents": [
+      {
+        "position": "Co-Lead Backend Developer",
+        "date": "Mar 25 - Present",
+        "duration": "-",
+        "description": [
+          "Assign and Manage Tasks for Backend Developers",
+          "Plan and Strategize Project Development",
+          "Review and Approve Code for Backend Team",
+          "Implement Security Best Practices in API Development",
+          "Collaborate with Frontend Teams for API Integrations",
+          "Conduct Technical Interviews for Backend Developers",
+          "Coordinate with DevOps Teams for Infrastructure Optimization",
+          "Collaborating in a team consisting of bussiness analyst, Project Manager, Co-lead Frontend UI/UX, and system analysts to determine strategies and steps in application strategic planning",
+          "Collaborating in a team consisting of frontend, backend, UI/UX, and system analysts to determine strategies and steps in application development"
+        ],
+        "tech": ["Github", "Javascript", "Python", "NodeJS", "Express", "Golang", "Flask", "Laravel", "Apisix", "MongoDB", "PostgreSQL", "MySQL", "Redis"]
+      },
+      {
+        "position": "Full-stack Developer",
+        "date": "Jun 23 - Feb 25",
+        "duration": "1 year 8 months",
+        "description": [
+          "Work for mini projects,internal projects and client projects",
+          "Work and developer projects with monolith architecture and microservices architecture",
+          "Leading a team consisting of students to develop the backend for a mini project in collaboration with various campuses",
+          "Review pull request to other developer, intern and freelancer",
+          "Performing vulnerability assessment tests on internal and client applications",
+          "Collaborating in a team consisting of frontend, backend, UI/UX, and system analysts to determine strategies and steps in application development"
+        ],
+        "tech": [
+          "Javascript",
+          "Python",
+          "NodeJS",
+          "Express",
+          "Golang",
+          "Flask",
+          "Vue",
+          "Nuxt",
+          "React",
+          "Next",
+          "Laravel",
+          "Tailwind",
+          "Apisix",
+          "MongoDB",
+          "PostgreSQL",
+          "MySQL",
+          "Redis",
+          "Aerospike"
+        ]
+      },
+      {
+        "position": "Front-end Developer",
+        "date": "May 23",
+        "duration": "1 month",
+        "description": [
+          "Added features and fixed bugs in various client applications",
+          "Utilized multiple technologies including Laravel, Vue.js, React.js, and Bootstrap",
+          "Employed Scrum and Agile methodologies for project management",
+          "Collaborated with UI/UX designers, backend developers, and frontend teams"
+        ],
+        "tech": ["Vue", "Nuxt", "Tailwind", "Laravel"]
+      }
+    ]
+  },
+  {
+    "company": "Raksasa Indonesia",
+    "contents": [
+      {
+        "position": "Front-end Developer",
+        "date": "Sep 22 - Apr 23",
+        "duration": "8 months",
+        "description": [
+          "Developed responsive websites using Material UI library, implementing features like QR scanning and building inventory management systems with Redux for state management",
+          "Collaborated with UI/UX designers, backend developers, and frontend teams to create dynamic websites",
+          "Implemented various data visualization charts (Bar, Line, Multi-Chart) and designed warehouse mapping features using OpenStreetMap",
+          "Maintained and enhanced company website including Kitchen admin dashboard and POS system, adding reservation functionality",
+          "Participated in Scrum methodology for project management and delivery",
+          "Experimented with Three.js for 3D website development",
+          "Assisted HR and management in technical screening of frontend developer candidates"
+        ],
+        "tech": ["React", "Redux", "Material UI", "OpenStreetMap", "Three.js", "Scrum"]
+      }
+    ]
+  }
+]
