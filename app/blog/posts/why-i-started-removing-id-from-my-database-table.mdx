@@ -1,0 +1,139 @@
+---
+title: 'Why I Removing "id" from My Database Table'
+publishedAt: '2025-07-14'
+summary: 'An id is an identifier used in every row of a database table. It’s what makes one record different from another. So why did I start removing id from my tables? More precisely—why did I stop naming the identifier column just id? Let me explain.'
+---
+
+![image info](/02/thumbnail.png)
+An id is an identifier used in every row of a database table. It’s what makes one record different from another. So why did I start removing id from my tables? More precisely—why did I stop naming the identifier column just id? Let me explain.
+
+## Introduction
+
+Introduction
+Let’s take a look at two versions of a user table:
+
+Table with id column
+
+![image info](/02/01-with-id.png)
+
+Table with [table]\_id column
+
+![image info](/02/02-change-id-with-user-id.png)
+
+From the images above, you can see the difference is just in the column name. One uses id, the other uses user_id. It may seem like a small detail, but changing the name of the ID column had a big impact for me and my team. Here's why.
+
+## The Reasons
+
+## The Trap
+
+### 1. Destructuring-Friendly Code
+
+In JavaScript (and many modern languages), we often use destructuring to extract values:
+
+```typescript
+const { user_id } = user;
+const { table_id } = table;
+```
+
+When your ID columns use a consistent pattern like [table]\_id, destructuring becomes more reliable. Each variable name is unique, and you avoid name collisions.
+
+But if every table uses just id:
+
+```typescript
+const { id } = user;
+const { id } = table; // Conflict!
+```
+
+It’s harder to work with multiple objects this way, especially in larger functions or components.
+
+### 2. Clearer API Responses
+
+Compare these two API responses.
+
+With [name]\_id:
+
+```json
+{
+  "data": {
+    "user_id": 1,
+    "name": "User",
+    "customer": {
+      "customer_id": 1,
+      "status": "permanent"
+    }
+  }
+}
+```
+
+With id:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "name": "User",
+    "customer": {
+      "id": 1,
+      "status": "permanent"
+    }
+  }
+}
+```
+
+When using user_id and customer_id, it’s easy to tell where each id belongs. But if every object just has id, it's confusing. What does id: 1 refer to—user, customer, product?
+
+It becomes even more confusing when calling different APIs:
+
+```json
+// GET /api/user
+{
+  "data": {
+    "id": 1,
+    "name": "User"
+  }
+}
+
+// GET /api/customer
+{
+  "data": {
+    "id": 1,
+    "status": "Permanent"
+  }
+}
+```
+
+Now both responses have id: 1, but they’re referring to different entities. With [name]\_id, there’s no guesswork.
+
+### 3. Easier Debugging & Maintenance
+
+ou might think id vs. [name]\_id is a small thing. But trust me—it matters when you're coming back to a project after months away.
+
+Let’s say you need to fix a bug in a project you haven’t touched in a while. You come across code like this:
+
+```typescript
+await db.update({
+  where: { id },
+});
+```
+
+You now have to trace back to figure out: Which table is this ID referring to?
+
+But if the code looked like this:
+
+```typescript
+await db.update({
+  where: { customer_id },
+});
+```
+
+It’s instantly clear: this is about the customer table. No extra digging needed.
+
+When you’re switching between projects or working with other people’s code, this clarity saves time — especially during debugging or hotfixes.
+
+## Final Thoughts
+
+Renaming id to [table]\_id might seem unnecessary or too picky, but for me, it's been one of the best small improvements I've made in my codebase. It improves clarity, avoids bugs, and saves time—especially in larger projects or when collaborating in teams.
+
+It’s not about removing the identifier itself. It’s about naming it with context.
+
+Simple changes, big impact.
