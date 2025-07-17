@@ -76,7 +76,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={cx('text-black bg-white dark:text-white dark:bg-black', GeistSans.variable, GeistMono.variable)}>
       <body className="antialiased max-w-xl  lg:mx-auto flex">
-        <ButtonTerminal />
+        {/* <ButtonTerminal /> */}
         <div className="h-screen flex flex-col justify-center items-center sticky top-0 left-0 z-10 gap-4 py-4">
           <div className="grow h-[80px] bg-gray-900 w-0.5"></div>
           <ul className="flex flex-col gap-4">
