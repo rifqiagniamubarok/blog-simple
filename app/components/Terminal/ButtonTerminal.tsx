@@ -14,10 +14,10 @@ export default function ButtonTerminal() {
         <p>{`</>`}</p>
       </button> */}
       <div
-        className="w-80 fixed right-0 z-20 h-screen bg-gradient-to-r from-black/0 via-black/50 to-black/100 opacity-0 hover:opacity-100 transition-opacity duration-1000 flex items-center justify-end pr-10 cursor-pointer text-3xl font-medium tracking-widest"
+        className="w-80 fixed right-0 z-20 h-screen bg-gradient-to-r from-black/0 via-black/50 to-black/100 opacity-0 hover:opacity-100 transition-opacity duration-1000 flex items-center justify-end pr-10 cursor-pointer text-2xl font-medium tracking-widest"
         onClick={() => setIsShowTerminal(!isShowTerminal)}
       >
-        <p className="[writing-mode:vertical-lr] rotate-180 text-transparent bg-clip-text bg-white mix-blend-difference">BACKEND SIDE</p>
+        <p className="[writing-mode:vertical-lr] rotate-180 text-transparent bg-clip-text bg-white mix-blend-difference">{`B  A  C  K  E  N  D     S  I  D  E`}</p>
       </div>
 
       {isShowTerminal && <Terminal onExit={() => setIsShowTerminal(false)} />}
