@@ -11,6 +11,7 @@ import { title } from 'process';
 import Link from 'next/link';
 import Terminal from './components/Terminal';
 import ButtonTerminal from './components/Terminal/ButtonTerminal';
+import LoadignCover from './components/LoadingCover';
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -76,6 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={cx('text-black bg-white dark:text-white dark:bg-black', GeistSans.variable, GeistMono.variable)}>
       <body className="antialiased max-w-xl  lg:mx-auto flex">
+        <LoadignCover />
         <ButtonTerminal />
         <div className="h-screen flex flex-col justify-center items-center sticky top-0 left-0 z-10 gap-4 py-4">
           <div className="grow h-[80px] bg-gray-900 w-0.5"></div>

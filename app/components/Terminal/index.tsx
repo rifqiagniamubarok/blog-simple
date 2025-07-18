@@ -363,7 +363,7 @@ export default function Terminal({ onExit }: TerminalProps) {
   };
   return (
     <label htmlFor="terminalInput">
-      <div className="fixed h-screen w-screen inset-0 bg-black z-50">
+      <div className="fixed h-screen w-screen inset-0 bg-black z-30">
         <div className="flex flex-col h-full ">
           <div className="w-full flex justify-between bg-gray-200 text-black border-gray-400 font-semibold">
             <div className="flex ml-5 items-center h-full">
