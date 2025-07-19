@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { CornerDownRight } from 'lucide-react';
 import classNames from 'classnames';
 import { clear } from 'console';
+import { useRouter } from 'next/navigation';
 
 interface ResponseItem {
   text: string;
@@ -105,6 +106,21 @@ export default function Terminal({ onExit }: TerminalProps) {
   const [currentDirectory, setCurrentDirectory] = useState('');
   const [content, setContent] = useState<ContentItem[]>(defaultTerminalContent);
   const contentRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  // Function to stop all typing animations
+  const stopTypingAnimations = () => {
+    setContent((prev) =>
+      prev.map((item) => ({
+        ...item,
+        responses: item.responses.map((response) => ({
+          ...response,
+          isTyping: false,
+          // Keep displayedText as is (don't complete it)
+        })),
+      }))
+    );
+  };
 
   const addCommand = (
     command: string,
@@ -118,7 +134,15 @@ export default function Terminal({ onExit }: TerminalProps) {
       displayedText: '',
     }));
 
-    setContent((prev) => [...prev, { command, status, responses: responseItems, color, dir: currentDirectory }]);
+    if (!status) {
+      responseItems.push({
+        text: '"help" or "/h" to see available commands',
+        isTyping: true,
+        displayedText: '',
+      });
+    }
+
+    setContent((prev) => [...prev, { command, status, responses: responseItems, color: status ? color : 'text-red-500', dir: currentDirectory }]);
   };
 
   const commandList = {
@@ -145,6 +169,12 @@ export default function Terminal({ onExit }: TerminalProps) {
       description: 'Exits the terminal',
       responses: [],
       action: () => handleExit(),
+    },
+    goto: {
+      alternative: 'gt',
+      description: 'Direct to a page of target directory',
+      responses: [],
+      action: () => handleGoto(),
     },
     clear: {
       alternative: '/c',
@@ -183,7 +213,7 @@ export default function Terminal({ onExit }: TerminalProps) {
     });
 
     if (currentDirectory) {
-      addCommand('list', false, [`No files in ${currentDirectory}`]);
+      addCommand(input, false, [`No files in ${currentDirectory}`]);
       return;
     }
 
@@ -199,6 +229,32 @@ export default function Terminal({ onExit }: TerminalProps) {
     } else {
       const responses = [`No such directory: ${dir}`];
       addCommand(`cd ${dir}`, false, responses, 'text-red-500');
+    }
+  };
+
+  const handleGoto = () => {
+    const dir = input.split(' ')[1];
+
+    if (dir in directoryList && currentDirectory === '') {
+      const href = directoryList[dir].href;
+      addCommand(input, true, [`Redirecting to ${href}...`], 'text-emerald-600');
+      router.push(href);
+      handleExit();
+    } else if (dir in directoryList && currentDirectory !== '') {
+      const href = directoryList[dir].href;
+      addCommand(input, false, [`No such directory: ${dir}`], 'text-emerald-600');
+    } else if (dir == '.' && currentDirectory !== '') {
+      const href = directoryList[currentDirectory].href;
+      addCommand(input, true, [`Redirecting to ${href}...`], 'text-emerald-600');
+      router.push(href);
+      handleExit();
+    } else if (dir == '.' && currentDirectory === '') {
+      const href = directoryList[currentDirectory].href;
+      addCommand(input, true, [`You are in main directory`], 'text-emerald-600');
+      router.push(href);
+      handleExit();
+    } else {
+      addCommand(`go to ${dir}`, false, [`No such directory: ${dir}`], 'text-red-500');
     }
   };
 
@@ -235,6 +291,25 @@ export default function Terminal({ onExit }: TerminalProps) {
       onExit && onExit();
     }, randomDelay);
   };
+
+  // Add keyboard event listener for Ctrl+C
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Check for Ctrl+C (Windows/Linux) or Cmd+C (Mac)
+      if ((event.ctrlKey || event.metaKey) && event.key === 'c') {
+        event.preventDefault();
+        stopTypingAnimations();
+
+        // Add interrupted message to show the command was cancelled
+        if (isBootedUp) {
+          addCommand('^C', false, ['Process interrupted'], 'text-yellow-400');
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isBootedUp]);
 
   useEffect(() => {
     const typingInterval = setInterval(() => {
@@ -301,6 +376,9 @@ export default function Terminal({ onExit }: TerminalProps) {
     e.preventDefault();
     if (input.trim() === '') return;
 
+    // Stop all typing animations immediately but keep current displayed text
+    stopTypingAnimations();
+
     const command = input.split(' ')[0].toLowerCase();
 
     // Here you can add logic to handle different commands
@@ -321,7 +399,7 @@ export default function Terminal({ onExit }: TerminalProps) {
   };
   return (
     <label htmlFor="terminalInput">
-      <div className="fixed h-screen w-screen inset-0 bg-black z-50">
+      <div className="fixed h-screen w-screen inset-0 bg-black z-30">
         <div className="flex flex-col h-full ">
           <div className="w-full flex justify-between bg-gray-200 text-black border-gray-400 font-semibold">
             <div className="flex ml-5 items-center h-full">
