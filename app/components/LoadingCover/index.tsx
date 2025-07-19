@@ -71,7 +71,7 @@ export default function LoadignCover() {
                   return (
                     <div
                       className={classNames(
-                        'w-10 h-10 transition-all duration-500',
+                        'w-4 h-4 md:w-10 md:h-10 transition-all duration-500',
                         cell ? (isVisible ? 'bg-black dark:bg-white opacity-100' : 'bg-black dark:bg-white opacity-0') : 'opacity-0',
                         isLastCell && isVisible && !isHiding ? 'animate-pulse' : ''
                       )}

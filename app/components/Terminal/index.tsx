@@ -108,6 +108,20 @@ export default function Terminal({ onExit }: TerminalProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
+  // Function to stop all typing animations
+  const stopTypingAnimations = () => {
+    setContent((prev) =>
+      prev.map((item) => ({
+        ...item,
+        responses: item.responses.map((response) => ({
+          ...response,
+          isTyping: false,
+          // Keep displayedText as is (don't complete it)
+        })),
+      }))
+    );
+  };
+
   const addCommand = (
     command: string,
     status: boolean,
@@ -278,6 +292,25 @@ export default function Terminal({ onExit }: TerminalProps) {
     }, randomDelay);
   };
 
+  // Add keyboard event listener for Ctrl+C
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Check for Ctrl+C (Windows/Linux) or Cmd+C (Mac)
+      if ((event.ctrlKey || event.metaKey) && event.key === 'c') {
+        event.preventDefault();
+        stopTypingAnimations();
+
+        // Add interrupted message to show the command was cancelled
+        if (isBootedUp) {
+          addCommand('^C', false, ['Process interrupted'], 'text-yellow-400');
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isBootedUp]);
+
   useEffect(() => {
     const typingInterval = setInterval(() => {
       setContent((prev) =>
@@ -342,6 +375,9 @@ export default function Terminal({ onExit }: TerminalProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim() === '') return;
+
+    // Stop all typing animations immediately but keep current displayed text
+    stopTypingAnimations();
 
     const command = input.split(' ')[0].toLowerCase();
 
