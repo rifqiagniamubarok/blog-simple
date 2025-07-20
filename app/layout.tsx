@@ -23,6 +23,9 @@ export const metadata: Metadata = {
   icons: {
     icon: './favicon.ico',
   },
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION,
+  },
   openGraph: {
     title: 'My Portfolio',
     description: 'This is my portfolio.',
