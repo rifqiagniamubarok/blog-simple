@@ -1,0 +1,113 @@
+---
+title: 'How to Send Emails with SMTP the Right Way (JUNIORS MUST READ)'
+publishedAt: '2025-07-21'
+summary: `Email remains one of the easiest and most reliable ways for any platform or service to send notifications to users. Whether you're verifying an account, resetting a password, or sending payment confirmations - emails are everywhere.`
+---
+
+![image info](/03/thumbnail.png)
+
+Email remains one of the easiest and most reliable ways for any platform or service to send notifications to users. Whether you're verifying an account, resetting a password, or sending payment confirmations - **emails are everywhere**.
+
+Most of the time, we send these emails via **SMTP** or **external APIs** like SendGrid, Mailgun, or Amazon SES. But if you're using SMTP directly, and especially if you're a junior developer, there's a good chance you're doing it wrong.
+
+## Common Problems When Sending Emails via SMTP
+
+If email delivery isn't implemented properly, two major problems usually arise:
+
+1. **The API times out.** (Yes, your endpoint just hangs and eventually dies with a 408 Timeout.)
+2. **The email doesn't get delivered.** (No errors, but the user never sees it.)
+
+These issues are extremely common - and avoidable - if you follow best practices.
+
+## Solution 1: Fire and Forget
+
+SMTP is **not instant**. Email sending is a **blocking operation** that can take several seconds or more.
+Beginners often make the mistake of `await`ing the email function:
+
+```typescript
+await sendEmail();
+```
+
+This forces your API to **wait** until the email is actually sent, which can easily cause a timeout - especially in high-traffic scenarios.
+
+**The fix: Just don't await it.**
+
+Let the email function run in the background:
+
+```typescript
+sendEmail();
+```
+
+This is known as **"Fire and Forget"** - you call the function and move on, without caring about the result in that exact moment.
+
+> Tip: You can still log the result internally to check whether the email was eventually sent or not.
+
+## Solution 2: Use a Queue
+
+Sending emails - especially via **SMTP** - is slow. If you try to send multiple emails at once, things can get messy:
+
+- Some emails might get dropped.
+- Some might appear to succeed, but never reach the user.
+- Your system might report a success when it actually failed.
+
+The best way to handle this is to **implement a queue.**
+
+### Option A: Use a Message Broker
+
+This is the best and most scalable solution. You can use tools like:
+
+- Redis Streams
+- RabbitMQ
+- Kafka (for more complex systems)
+
+A message broker helps **decouple** your email sending from the rest of your application and handles concurrency, retries, and error tracking much more gracefully.
+
+### Option B: Queue via Database
+
+If your team or project has limited budget or infrastructure, you can use your database:
+
+- Create a table for "pending emails".
+- Have a background worker (e.g., CRON job or queue consumer) process them in order.
+
+It's not as powerful, but it's a practical and reliable option for projects with limited budget.
+
+### Option C: In-Memory or Logic-Based Queue
+
+If you're working on a **low-budget project**, you can build a simple queue system using code logic. This method avoids the need for external tools and infrastructure.
+
+For example, you might push email jobs into an array and process them sequentially . You log the success or failure of each email using simple `console.log()` or any lightweight logger.
+
+> There might be libraries out there that help you implement a logic-based queue, but past time, I builded it alone :).
+
+## Solution 3: Provide a "Resend" Feature (Optional but Recommended)
+
+Things can go wrong. Even if you're using a queue, there's always a chance an email fails due to **external factors** - like spam filters, provider issues, or network glitches.
+
+That's why it's helpful to give users a **"Resend Email"** option. Especially for use cases like:
+
+- Email verification (OTP)
+- Password reset
+- Transaction confirmation
+
+Letting the user manually trigger a resend gives them control and improves reliability.
+
+## Solution 4: Implement Auto-Retry Logic (Optional)
+
+In addition to a "resend" button, you can also build automated retry logic for background email jobs.
+Here's what I usually do:
+
+- If an email fails to send, I don't immediately discard it.
+- Instead, I re-add it to the **back of the queue**.
+- I allow **1 to 3 retry attempts**, depending on the use case.
+- If it still fails after the limit, I log it as permanently failed.
+
+This is especially useful for system-triggered emails (e.g., payment callbacks) where the user **can't** manually request a resend.
+
+## Final Thoughts
+
+Email seems simple - but doing it right requires more than just calling `sendEmail()` inside your API.
+
+> If you remember nothing else from this article, remember this:
+> **Never await SMTP in your API. Always use a queue.**
+
+By applying **fire-and-forget**, using **queues**, and optionally adding retry logic, your email system will be faster, more reliable, and far more professional.
