@@ -2,32 +2,28 @@ import './global.css';
 import type { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
-import { Navbar } from './components/nav';
+import { ModernNavbar } from './components/ModernNavbar';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Footer from './components/footer';
 import { baseUrl } from './sitemap';
-import { title } from 'process';
-import Link from 'next/link';
-import Terminal from './components/Terminal';
-import ButtonTerminal from './components/Terminal/ButtonTerminal';
-import LoadignCover from './components/LoadingCover';
+import AnimatedLayout from './components/AnimatedLayout';
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: 'Next.js Portfolio Starter',
-    template: '%s | Next.js Portfolio Starter',
+    default: 'Rifqi Agnia Mubarok - Portfolio',
+    template: '%s | Rifqi Agnia Mubarok',
   },
-  description: 'This is my portfolio.',
+  description: 'Full-stack developer passionate about creating modern web experiences.',
   icons: {
     icon: './favicon.ico',
   },
   openGraph: {
-    title: 'My Portfolio',
-    description: 'This is my portfolio.',
+    title: 'Rifqi Agnia Mubarok - Portfolio',
+    description: 'Full-stack developer passionate about creating modern web experiences.',
     url: baseUrl,
-    siteName: 'My Portfolio',
+    siteName: 'Rifqi Agnia Mubarok',
     locale: 'en_US',
     type: 'website',
   },
@@ -46,55 +42,36 @@ export const metadata: Metadata = {
 
 const cx = (...classes) => classes.filter(Boolean).join(' ');
 
-const socmeds = [
-  {
-    title: 'Medium',
-    url: 'https://medium.com/@rifqiagniamubarok',
-  },
-  {
-    title: 'Linkedin',
-    url: 'https://www.linkedin.com/in/rifqiagniamubarok/',
-  },
-  {
-    title: 'Github',
-    url: 'https://github.com/rifqiagniamubarok',
-  },
-  // {
-  //   title: 'Email',
-  //   url: '',
-  // },
-];
-
-const SocmedItem = ({ title, href }) => {
-  return (
-    <li className="[writing-mode:vertical-lr] rotate-180">
-      <Link href={href}>{title}</Link>
-    </li>
-  );
-};
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={cx('text-black bg-white dark:text-white dark:bg-black', GeistSans.variable, GeistMono.variable)}>
-      <body className="antialiased max-w-xl  lg:mx-auto flex">
-        <LoadignCover />
-        <ButtonTerminal />
-        <div className="h-screen flex flex-col justify-center items-center sticky top-0 left-0 z-10 gap-4 py-4">
-          <div className="grow h-[80px] bg-gray-900 w-0.5"></div>
-          <ul className="flex flex-col gap-4">
-            {socmeds.map((socmed, index) => (
-              <SocmedItem key={index} title={socmed.title} href={socmed.url} />
-            ))}
-          </ul>
-          <div className="grow h-full bg-gray-900 w-0.5"></div>
+    <html lang="en" className={cx('antialiased', GeistSans.variable, GeistMono.variable)}>
+      <body className="min-h-screen text-white">
+        {/* Main Layout Container */}
+        <div className="flex min-h-screen">
+          {/* Sidebar */}
+          <aside className="sidebar fixed left-0 top-0 w-80 h-screen p-8 z-50">
+            {/* Profile Section */}
+            <div className="mb-12">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 mb-4 flex items-center justify-center text-2xl font-bold">R</div>
+              <h1 className="text-xl font-bold text-white mb-2">Rifqi Agnia Mubarok</h1>
+              <p className="text-text-secondary text-sm">Full-stack Developer</p>
+            </div>
+
+            {/* Navigation */}
+            <ModernNavbar />
+          </aside>
+
+          {/* Main Content */}
+          <main className="flex-1 ml-80 min-h-screen">
+            <div className="max-w-4xl mx-auto px-8 py-12">
+              <AnimatedLayout>{children}</AnimatedLayout>
+              <Footer />
+            </div>
+          </main>
         </div>
-        <main className="flex-auto min-w-0 flex flex-col px-2 md:px-0 grow mx-4 mt-8">
-          <Navbar />
-          {children}
-          <Footer />
-          <Analytics />
-          <SpeedInsights />
-        </main>
+
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

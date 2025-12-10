@@ -1,4 +1,5 @@
 import { ProjectPosts } from 'app/components/projects';
+import ProjectClient from '../components/project-client';
 
 export const metadata = {
   title: 'Projects',
@@ -7,9 +8,8 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <section>
-      <h1 className="font-semibold text-2xl mb-8 tracking-tighter">My Projects</h1>
+    <ProjectClient>
       <ProjectPosts />
-    </section>
+    </ProjectClient>
   );
 }
