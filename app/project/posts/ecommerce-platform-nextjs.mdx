@@ -1,0 +1,60 @@
+---
+title: 'E-Commerce Platform with Next.js'
+publishedAt: '2024-01-15'
+summary: 'A full-stack e-commerce platform built with Next.js, TypeScript, and Stripe for payment processing.'
+image: '/projects/ecommerce.jpg'
+technologies: ['Next.js', 'TypeScript', 'Prisma', 'PostgreSQL', 'Stripe', 'Tailwind CSS']
+github: 'https://github.com/yourusername/ecommerce-platform'
+demo: 'https://your-ecommerce-demo.vercel.app'
+---
+
+# E-Commerce Platform
+
+This project is a comprehensive e-commerce solution that I built to learn modern web development practices and explore the latest features of Next.js.
+
+## Features
+
+- **Product Management**: Full CRUD operations for products with image upload
+- **User Authentication**: Secure sign-up/sign-in with NextAuth.js
+- **Shopping Cart**: Persistent cart with local storage
+- **Payment Processing**: Integrated Stripe for secure payments
+- **Order Management**: Order history and status tracking
+- **Admin Dashboard**: Manage products, orders, and users
+
+## Tech Stack
+
+The application is built using a modern tech stack that ensures performance, scalability, and developer experience:
+
+- **Frontend**: Next.js 13+ with App Router
+- **Styling**: Tailwind CSS for utility-first styling
+- **Database**: PostgreSQL with Prisma ORM
+- **Payment**: Stripe for handling payments
+- **Authentication**: NextAuth.js for secure authentication
+- **Deployment**: Vercel for seamless deployment
+
+## Key Features
+
+### Product Catalog
+
+The product catalog supports categories, search functionality, and filtering. Each product has detailed information including multiple images, descriptions, and inventory tracking.
+
+### Shopping Cart
+
+The shopping cart is persistent across sessions and provides a smooth user experience with real-time updates and quantity adjustments.
+
+### Secure Checkout
+
+Integrated with Stripe for secure payment processing, supporting multiple payment methods and currencies.
+
+## Challenges & Solutions
+
+One of the main challenges was implementing real-time inventory updates to prevent overselling. I solved this by implementing database transactions and optimistic locking.
+
+Another challenge was optimizing the product images for different screen sizes. I used Next.js Image component with multiple breakpoints and lazy loading.
+
+## Future Improvements
+
+- Add product reviews and ratings
+- Implement wishlist functionality
+- Add real-time notifications for order updates
+- Integrate with inventory management systems

@@ -1,0 +1,99 @@
+---
+title: 'Task Management App with React Native'
+publishedAt: '2024-02-20'
+summary: 'A cross-platform mobile app for task management with offline support and real-time synchronization.'
+image: '/projects/task-app.jpg'
+technologies: ['React Native', 'TypeScript', 'SQLite', 'Firebase', 'Expo']
+github: 'https://github.com/yourusername/task-management-app'
+demo: 'https://expo.dev/@yourusername/task-manager'
+---
+
+# Task Management Mobile App
+
+A comprehensive task management application built with React Native that works seamlessly across iOS and Android platforms.
+
+## Overview
+
+This mobile application was designed to help users organize their daily tasks efficiently with both online and offline capabilities. The app features a clean, intuitive interface inspired by modern design principles.
+
+## Core Features
+
+### Task Management
+
+- Create, edit, and delete tasks
+- Set priorities and due dates
+- Add tags and categories
+- Mark tasks as complete
+- Archive completed tasks
+
+### Organization
+
+- Create custom categories
+- Filter tasks by status, priority, or category
+- Search functionality across all tasks
+- Sort tasks by different criteria
+
+### Offline Support
+
+The app works completely offline using SQLite for local storage. When internet connection is restored, data automatically syncs with Firebase.
+
+### Real-time Sync
+
+- Automatic synchronization across devices
+- Conflict resolution for simultaneous edits
+- Real-time updates when connected
+
+## Technical Implementation
+
+### Architecture
+
+The app follows a clean architecture pattern with:
+
+- **Presentation Layer**: React Native components with TypeScript
+- **Business Logic**: Custom hooks and context providers
+- **Data Layer**: SQLite for local storage, Firebase for cloud sync
+
+### State Management
+
+Used React Context API combined with useReducer for predictable state management across the application.
+
+### Navigation
+
+Implemented with React Navigation v6, featuring:
+
+- Tab navigation for main sections
+- Stack navigation for detailed views
+- Modal navigation for task creation/editing
+
+## Development Challenges
+
+### Offline-First Approach
+
+Implementing true offline-first functionality was challenging. I had to design a robust conflict resolution system for when users edit the same task on different devices while offline.
+
+### Performance Optimization
+
+Managing large task lists required implementing:
+
+- Virtualized lists for smooth scrolling
+- Lazy loading of task details
+- Efficient database queries with indexing
+
+### Cross-Platform Consistency
+
+Ensuring the app looks and feels native on both iOS and Android required platform-specific styling and behavior adaptations.
+
+## Key Learnings
+
+- The importance of offline-first design in mobile apps
+- How to implement efficient data synchronization
+- Best practices for React Native performance optimization
+- User experience considerations for mobile task management
+
+## Future Enhancements
+
+- Team collaboration features
+- Voice-to-text task creation
+- Integration with calendar apps
+- Advanced analytics and productivity insights
+- Widget support for home screen
